@@ -1,23 +1,30 @@
+import { useSelector } from 'react-redux';
+
 import logo from './logo.svg';
 import './App.css';
+import LoginSignup from './Components/LoginSignup';
+import CheckSetup from './Components/CheckSetup'
+
 
 function App() {
+  const user = useSelector( state => state.auth);
+  console.log(user)
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
         <a
           className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
+          href="/"
           rel="noopener noreferrer"
         >
-          Learn React
+          Restaurant App
         </a>
+        
       </header>
+      <main>
+        { user.user ? <CheckSetup user={user.user}/> : <LoginSignup />}
+      </main>
     </div>
   );
 }
