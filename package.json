@@ -15,10 +15,11 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "build:css": "postcss src/index.css -o src/app.css",
+    "eject": "craco eject"
   },
   "eslintConfig": {
     "extends": [
@@ -39,7 +40,11 @@
     ]
   },
   "devDependencies": {
+    "@craco/craco": "^6.3.0",
+    "autoprefixer": "^9.8.6",
     "dotenv": "^8.2.0",
-    "dotenv-webpack": "^7.0.3"
+    "dotenv-webpack": "^7.0.3",
+    "postcss": "^7.0.36",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.14"
   }
 }

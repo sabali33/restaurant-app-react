@@ -1,14 +1,16 @@
-import React, { useState, useReducer } from 'react';
+import React from 'react';
 
+import LoginForm from './LoginForm';
+import SignupForm from './SignupForm';
 
 const LoginSignup = (props) => {
-    const [ loginEmail, setLoginEmail ] = useState('');
-
-    //const [enteredData, setEnteredData ] = useReducer([]);
-
+    
     return (
-        <div className="login-signup-box">
-            You are welcome
+        <div className="login-signup-box mx-auto">
+            <div className="flex justify-between w-full">
+                <SignupForm />
+                <LoginForm />
+            </div>
         </div>
     )
 
