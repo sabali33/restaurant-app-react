@@ -51,13 +51,18 @@ const SignupForm = props => {
             value: e.target.value
         })
     }
+    const signupHandler = event => {
+        event.persist();
+        console.log(signupState)
+        
+    }
     
     return (
         <div className="signup-box w-1/2 bg-gray-200 p-12 rounded-md">
             <h2 className="text-2xl font-bold mb-16">
                 Sign up
             </h2>
-            <div className="text-field mb-10">
+            <div className="text-field mb-4">
                 <p className="mb-2">
                     <label htmlFor="first-name" className="text-gray-700"> First Name </label>
                 </p>
@@ -65,7 +70,7 @@ const SignupForm = props => {
                     <input type="text"  onChange={ inputChangeHandler.bind(this, 'first_name') } value={signupState.data.first_name} id="first-name" className="rounded w-full leading-10 pl-5 shadow"/>
                 </p>
             </div>
-            <div className="text-field mb-10">
+            <div className="text-field mb-4">
                 <p className="mb-2">
                     <label htmlFor="last-name" className="text-gray-700"> Last Name </label>
                 </p>
@@ -73,7 +78,7 @@ const SignupForm = props => {
                     <input type="text"  onChange={ inputChangeHandler.bind(this, 'last_name') } value={signupState.data.last_name} id="last-name" className="rounded w-full leading-10 pl-5 shadow"/>
                 </p>
             </div>
-            <div className="text-field mb-10">
+            <div className="text-field mb-4">
                 <p className="mb-2">
                     <label htmlFor="email" className="text-gray-700"> Email </label>
                 </p>
@@ -81,7 +86,7 @@ const SignupForm = props => {
                     <input type="email"  onChange={ inputChangeHandler.bind(this, 'email') } value={signupState.data.email} id="email" className="rounded w-full leading-10 pl-5 shadow"/>
                 </p>
             </div>
-            <div className="text-field mb-10">
+            <div className="text-field mb-4">
                 <p className="mb-2">
                     <label htmlFor="password" className="text-gray-700"> Password </label>
                 </p>
@@ -89,7 +94,7 @@ const SignupForm = props => {
                     <input type="password"  onChange={ inputChangeHandler.bind(this, 'password') } value={signupState.data.password} id="password" className="rounded w-full leading-10 pl-5 shadow"/>
                 </p>
             </div>
-            <div className="text-field mb-10">
+            <div className="text-field mb-4">
                 <p className="mb-2">
                     <label htmlFor="password-confirm" className="text-gray-700"> Password Confirm </label>
                 </p>
@@ -97,9 +102,9 @@ const SignupForm = props => {
                     <input type="password"  onChange={ inputChangeHandler.bind(this, 'password_confirm') } value={signupState.data.password_confirm} id="password-confirm" className="rounded w-full leading-10 pl-5 shadow"/>
                 </p>
             </div>
-            <div className="text-field mb-10">
+            <div className="text-field mb-4">
                 <p>
-                    <button className="bg-yellow-200 text-gray-600 px-10 py-3 rounded font-bold"> Sign up</button>
+                    <button className="bg-yellow-200 text-gray-600 px-10 py-3 rounded font-bold" onClick={signupHandler}> Sign up</button>
                 </p>
             </div>
         </div>

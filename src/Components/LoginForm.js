@@ -1,11 +1,12 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { loginAction } from '../Actions.js/Auth';
+import { isEmail } from '../Utils';
 
 const LoginForm = props => {
     const [ loginEmail, setLoginEmail ] = useState('');
     const [ loginPassword, setLoginPassword ] = useState('');
-    const [ loginError, setLoginError ] = useState(null);
+    const [ loginError, setLoginError ] = useState('');
     const dispatch = useDispatch();
 
     const loginInputChangeHandler = (setFunc, event) => {
@@ -13,16 +14,31 @@ const LoginForm = props => {
         setFunc(event.target.value);
     }
     const loginHandler = async () => {
+        if(loginEmail.trim().length < 1){
+            setLoginError("Email field can't be empty");
+            return;
+        }
+        if(loginPassword.trim().length < 1){
+            
+            setLoginError("Password can't be empty");
+            return;
+        }
+        if( !isEmail(loginEmail) ){
+            setLoginError("Email Address is not valid");
+            return;
+        }
         try{
            await dispatch(loginAction(loginEmail, loginPassword)); 
         }catch( err){
+
             setLoginError(err.message);
         }
     }
+    
     return (
-        <div className="login-box w-1/2 p-12 border-2 border-solid border-gray-600 border-opacity-100">
+        <div className="login-box w-1/2 p-12 border-2 border-solid border-gray-200 border-opacity-100 rounded-md">
             {
-                loginError && <div className="text-red-400 pt-3 mb-8"> Error: {loginError}</div>
+                Object.keys(loginError).length > 0 ? <div className="text-red-400 pt-3 mb-8">{loginError}</div> : ""
             }
             <h2 className="text-2xl font-bold mb-16">
                 Login

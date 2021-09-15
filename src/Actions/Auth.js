@@ -1,6 +1,7 @@
 import config from '../config';
 
 export const LOGIN_USER = "LOGIN_USER";
+export const LOGOUT_USER = "LOGOUT_USER";
 
 export const loginAction = ( email='', password='' ) => {
     const localStorage = window.localStorage;
@@ -50,5 +51,12 @@ export const loginAction = ( email='', password='' ) => {
                 type: LOGIN_USER
             });
         }
+    }
+}
+export const logoutAction = () => {
+    const localStorage = window.localStorage;
+    localStorage.removeItem('ra-user-token');
+    return {
+        type: LOGOUT_USER
     }
 }
