@@ -1,46 +1,33 @@
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import LoginSignup from './Components/LoginSignup';
 import MainApp from './Components/MainApp'
-import { loginAction, logoutAction } from './Actions.js/Auth';
-
+import { loginAction, logoutAction } from './Actions/Auth';
 
 function App() {
-	const [restaurant, setRestaurant ] = useState(null);
-
+	
 	const user = useSelector( state => state.auth);
-	const { store } = user;
 	const dispatch = useDispatch();
 	const getUser = useCallback(async () => {
 		try{
-		await dispatch(loginAction())
+			await dispatch(loginAction())
 		}catch( err ){
 		console.log(err.message)
 		}
 	}, [dispatch]);
-	const getUserRestaurant = useCallback(async () => {
-		try{
-			if(store){
-				setRestaurant(store);
-			}
-		
-		}catch( err ){
-		console.log(err.message)
-		}
-	}, [store]);
-
+	
 	useEffect( () => {
 		getUser();
-		getUserRestaurant()
-
-	}, [getUser, getUserRestaurant]);
-
+		
+	}, [getUser]);
+	
 	const logouthandler = e => {
 		e.preventDefault();
 		e.persist();
 		dispatch(logoutAction())
 	}
+	console.log()
   return (
     <div className="App pt-10">
       	<header className="App-header mb-10 mx-auto container text-center">
@@ -66,7 +53,7 @@ function App() {
       	</header>
 		  
 		<main className="w-3/5 mx-auto">
-			{ user.user ? <MainApp/> : <LoginSignup />}
+			{ user.user ? <MainApp /> : <LoginSignup />}
 		</main>
     </div>
   );

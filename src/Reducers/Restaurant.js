@@ -1,4 +1,4 @@
-import { CREATE_RESTAURANT } from '../Actions.js/Restaurant';
+import { CREATE_RESTAURANT } from '../Actions/Restaurant';
 const initialState = {
     restaurant: null
 };
@@ -10,7 +10,7 @@ export const CreateRestaurantReducer = ( state=initialState, action ) => {
                 ...state,
                 restaurant: action.restaurant
             }
-            
+        
         default:
             return state;
     }

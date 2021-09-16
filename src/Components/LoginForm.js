@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { loginAction } from '../Actions.js/Auth';
+import { loginAction } from '../Actions/Auth';
 import { isEmail } from '../Utils';
 
 const LoginForm = props => {

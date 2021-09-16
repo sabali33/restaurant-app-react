@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CreateRestaurantAction } from '../Actions.js/Restaurant';
-import MainApp from "./MainApp";
+import { CreateRestaurantAction } from '../Actions/Restaurant';
+import { getUserRestaurantAction } from '../Actions/Auth';
 
 const CreateRestaurantForm = () => {
     const [ name, setName ] = useState('');
     const [ error, setError ] = useState(null);
     const restaurant = useSelector( state => state.restaurant.restaurant );
-    const user = useSelector( state => state.auth);
+    
     const dispatch = useDispatch();
 
     const inputChangeHandler = e => {
@@ -21,11 +21,21 @@ const CreateRestaurantForm = () => {
         }catch( err ){
             setError(err.message);
         }
-        
     }
-    if( restaurant ){
-        //return <MainApp user={user.user} />
-    }
+
+    const getUserRestaurant = useCallback(async () => {
+		try{
+			await dispatch(getUserRestaurantAction(restaurant))
+			
+		}catch( err ){
+		console.log(err.message)
+		}
+	}, [dispatch, restaurant]);
+
+    useEffect( () => {
+        getUserRestaurant()
+    },[getUserRestaurant])
+
     return <div>
         <h2 className="text-xl font-bold text-gray-800 mb-10"> Create Restaurant </h2>
         <section className="w-3/5">

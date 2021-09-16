@@ -1,17 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CreateRestaurantForm from './CreateRestaurantForm ';
 import { useSelector } from 'react-redux';
+import Navigation from './Navigation';
 
+import Dashboard from './Dashboard';
+import Tables from './Tables';
+import Reservations from './Reservations';
 
-const MainApp = (  ) => {
-    //const user = useSelector( state => state.auth.user);
-    const restaurant = useSelector( state => state.restaurant.restaurant );
-    console.log(restaurant)
-    if(!restaurant){
+const MainApp = props => {
+    
+    const user = useSelector( state => state.auth );
+    const [ activeComponentName, setActiveComponentName ] = useState('dashboard');
+    const components = {
+        dashboard: Dashboard,
+        tables: Tables,
+        reservations: Reservations
+    }
+    const setActiveComponentHandler = (name, event) => {
+        setActiveComponentName(name);
+    }
+
+    if(!user.user.store ){
         return <CreateRestaurantForm />
     }
-    return <div>
-        Welcome
-    </div>
+    const ActiveComponent = components[activeComponentName];
+
+    return <section>
+        <div className="flex w-full">
+            <div className="w-1/4">
+                <Navigation setActiveComponent={setActiveComponentHandler}/>
+            </div>
+            <div className="w-3/4 p-8">
+                <ActiveComponent />
+            </div>
+        </div>
+        
+    </section>
 }
 export default MainApp;

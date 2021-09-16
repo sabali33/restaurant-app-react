@@ -1,4 +1,4 @@
-import { LOGIN_USER, LOGOUT_USER } from "../Actions.js/Auth";
+import { LOGIN_USER, LOGOUT_USER, GET_RESTAURANT } from "../Actions/Auth";
 const Auth = {
     user: null,
     token: null
@@ -12,6 +12,11 @@ export const AuthReducer = (state=Auth, action ) => {
                 ...state,
                 user:null,
                 token: null
+            }
+        case GET_RESTAURANT:
+            return {
+                ...state,
+                user: { ...state.user, store: action.restaurant }
             }
         default:
             return state;
