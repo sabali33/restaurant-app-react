@@ -7,6 +7,7 @@ import { loginAction, logoutAction } from './Actions/Auth';
 function App() {
 	
 	const user = useSelector( state => state.auth);
+	console.log(user)
 	const dispatch = useDispatch();
 	const getUser = useCallback(async () => {
 		try{
@@ -42,7 +43,7 @@ function App() {
 			</div>
 			<div className="w-2/3">
 				{
-				user.user.token && 
+				user.token && 
 				<span className="text-gray-500 font-bold"> { `${user.user.first_name} ${user.user.last_name}`} 
 				<a href="/" className="text-red-400" onClick={logouthandler}>Logout</a></span>
 				}

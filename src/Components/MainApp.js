@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import CreateRestaurantForm from './CreateRestaurantForm ';
+import CreateRestaurantForm from './CreateRestaurantForm';
 import { useSelector } from 'react-redux';
 import Navigation from './Navigation';
 

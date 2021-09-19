@@ -1,24 +1,40 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect, useCallback } from 'react'
+import { useSelector, useDispatch } from 'react-redux';
 import Cell from './Cell';
 import AddTableForm from './AddTableForm';
+import { getTablesAction } from '../Actions/Table';
 
 const Tables = () => {
     const store_tables = useSelector( state => state.tables.tables );
-    const [tables, setTables ] = useState(store_tables);
-    const [editingTable, setEditingTable ] = useState(false);
     
+    const [editingTable, setEditingTable ] = useState(false);
+    const dispatch = useDispatch();
+    const getTables = useCallback(async () =>{
+        try{
+            await dispatch(getTablesAction());
+        }catch( err) {
+            console.log(err.message)
+        }
+    },[dispatch]);
+    useEffect( () => {
+        getTables()
+    },[getTables])
+
     const addTable = (cell_id) => {
-        console.log(cell_id);
+        setEditingTable(cell_id);
     }
-    const editTable = (table_id, e) => {
+    const editTable = (table_id) => {
+        console.log(table_id)
         setEditingTable(table_id);
     }
-    const closeEditingModal = (e) => {
-        e.stopPropagation();
-        e.persist();
-        
+    const closeEditingModal = () => {
         setEditingTable(false);
+    }
+    const cellsWithTables = () => {
+        return store_tables ? store_tables.map( table => table.id ) : [];
+    }
+    const findTable = (table_id) => {
+        return store_tables.find( table => table_id === table.id)
     }
     const cells = {};
     let cell_id = 1;
@@ -29,7 +45,7 @@ const Tables = () => {
             <Cell 
                 key={cell_id} 
                 id={cell_id} 
-                table={{id: cell_id}} 
+                table={cellsWithTables().includes(cell_id) ? findTable(cell_id) : null } 
                 onAddTable={addTable} 
                 onEditTable={editTable}
                 
@@ -47,7 +63,7 @@ const Tables = () => {
         {
             cells_arr
         }
-        { editingTable && <AddTableForm id={editingTable} onCloseModal={closeEditingModal}/> }
+        { editingTable && <AddTableForm id={editingTable} table={findTable(editingTable)} onCloseModal={closeEditingModal}/> }
     </div>)
 }
 
