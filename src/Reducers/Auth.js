@@ -1,6 +1,6 @@
 import { LOGIN_USER, LOGOUT_USER, GET_RESTAURANT } from "../Actions/Auth";
 const Auth = {
-    user: null,
+    user: {},
     token: null
 }
 export const AuthReducer = (state=Auth, action ) => {

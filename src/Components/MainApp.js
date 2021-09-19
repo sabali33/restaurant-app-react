@@ -11,13 +11,16 @@ const MainApp = props => {
     
     const user = useSelector( state => state.auth );
     const [ activeComponentName, setActiveComponentName ] = useState('dashboard');
+    const [ activeTab, setActiveTab ] = useState('dashboard');
     const components = {
         dashboard: Dashboard,
         tables: Tables,
         reservations: Reservations
     }
     const setActiveComponentHandler = (name, event) => {
+        
         setActiveComponentName(name);
+        setActiveTab(name);
     }
 
     if(!user.user.store ){
@@ -28,9 +31,9 @@ const MainApp = props => {
     return <section>
         <div className="flex w-full">
             <div className="w-1/4">
-                <Navigation setActiveComponent={setActiveComponentHandler}/>
+                <Navigation setActiveComponent={setActiveComponentHandler} activeTab={activeTab}/>
             </div>
-            <div className="w-3/4 p-8">
+            <div className="w-3/4">
                 <ActiveComponent />
             </div>
         </div>
