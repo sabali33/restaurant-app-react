@@ -1,5 +1,6 @@
-import React, {useReducer, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, {useReducer } from 'react';
+import { useDispatch } from 'react-redux';
+import { signUpUserAction } from '../Actions/Auth';
 
 
 const signUpReducer = (state, action) => {
@@ -13,14 +14,19 @@ const signUpReducer = (state, action) => {
             return {
                 ...state,
                 fieldsDirty: { ...state.fieldsDirty, [action.field]: true}
-            }  
+            }
+        case 'ERROR':
+            return {
+                ...state,
+                error: action.message
+            }
         default:
             return state;
     }
 }
 
 const SignupForm = props => {
-    const user = useSelector( state => state.auth);
+
     const dispatchRedux = useDispatch();
 
     const [signupState, dispatch ] = useReducer(signUpReducer, {
@@ -37,11 +43,10 @@ const SignupForm = props => {
             'email': false,
             'password': false,
             'password_confirm': false,
-        }
+        },
+        error: ''
     });
-    useEffect( () => {
-        //console.log(user)
-    }, [dispatchRedux, user] );
+
     const inputChangeHandler = ( field, e) => {
         e.persist();
         
@@ -51,14 +56,36 @@ const SignupForm = props => {
             value: e.target.value
         })
     }
-    const signupHandler = event => {
+    const signupHandler = async event => {
         event.persist();
-        console.log(signupState)
-        
+        try{
+            await dispatchRedux(
+                signUpUserAction(
+                    signupState.data.first_name, 
+                    signupState.data.last_name, 
+                    signupState.data.email, 
+                    signupState.data.password
+                )
+            )
+        }catch( err ){
+            console.log(err);
+            dispatch({
+                type: 'ERROR',
+                message: err.message
+            })
+        }
     }
     
     return (
         <div className="signup-box w-1/2 bg-gray-200 p-12 rounded-md">
+            {
+                signupState.error && 
+                <div className="text-red-400 py-2 px-4">
+                    {
+                        signupState.error
+                    }
+                </div>
+            }
             <h2 className="text-2xl font-bold mb-16">
                 Sign up
             </h2>
