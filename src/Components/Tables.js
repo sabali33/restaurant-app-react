@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
+import { HTML5Backend } from 'react-dnd-html5-backend'
+import { DndProvider } from 'react-dnd'
 import Cell from './Cell';
 import AddTableForm from './AddTableForm';
 import { getTablesAction } from '../Actions/Table';
@@ -58,13 +60,14 @@ const Tables = () => {
         cells_arr.push( <div className="flex" key={row}>{cells[row]}</div>);
     }
     
-    return (<div className="relative">
+    return (<DndProvider backend={HTML5Backend}>
+        <div className="relative">
         
         {
             cells_arr
         }
         { editingTable && <AddTableForm id={editingTable} table={findTable(editingTable)} onCloseModal={closeEditingModal}/> }
-    </div>)
+    </div></DndProvider>)
 }
 
 export default Tables;

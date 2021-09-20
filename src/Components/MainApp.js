@@ -33,7 +33,7 @@ const MainApp = props => {
             <div className="w-1/4">
                 <Navigation setActiveComponent={setActiveComponentHandler} activeTab={activeTab}/>
             </div>
-            <div className="w-3/4">
+            <div className="w-3/4 ml-8">
                 <ActiveComponent />
             </div>
         </div>
