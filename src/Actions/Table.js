@@ -8,7 +8,6 @@ export const DELETE_TABLE = "DELETE_TABLE";
 export const getTablesAction = () => {
     return async (dispatch, getState) => {
         const token = getState().auth.token;
-        console.log(token)
         const response = await fetch(`${config.apiRoot}tables`, {
             headers:{
                 Authorization: `Bearer ${token.token}`

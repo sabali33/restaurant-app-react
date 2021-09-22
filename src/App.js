@@ -31,23 +31,23 @@ function App() {
   return (
     <div className="App pt-10">
       	<header className="App-header mb-10 mx-auto container text-center">
-			<div className="flex">
-			<div className="w-1/3">
-				<a
-					className="font-extrabold text-4xl"
-					href="/"
-					rel="noopener noreferrer"
-				>
-				Restaurant <span className="text-yellow-200 px-2 bg-gray-600 rounded">App</span>
-				</a>
-			</div>
-			<div className="w-2/3">
-				{
-				user.token && 
-				<span className="text-gray-500 font-bold"> { `${user.user.first_name} ${user.user.last_name}`} 
-				<a href="/" className="text-red-400" onClick={logouthandler}>Logout</a></span>
-				}
-			</div>
+			<div className="flex justify-items-start">
+				<div className="w-1/3 text-left">
+					<a
+						className="font-extrabold text-4xl"
+						href="/"
+						rel="noopener noreferrer"
+					>
+					Restaurant <span className="text-yellow-200 px-2 bg-gray-600 rounded">App</span>
+					</a>
+				</div>
+				<div className="w-2/3 text-right">
+					{
+					user.token && 
+					<span className="text-gray-500 font-bold"> { `${user.user.first_name } ${user.user.last_name}`} 
+					<a href="/" className="text-red-400  ml-4" onClick={logouthandler}>Logout</a></span>
+					}
+				</div>
 			</div>
         
       	</header>
