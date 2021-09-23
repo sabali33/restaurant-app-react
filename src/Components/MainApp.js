@@ -24,7 +24,7 @@ const MainApp = () => {
         setActiveTab(name);
         
     }
-
+    
     if(!user.user.store ){
         return <CreateRestaurantForm />
     }

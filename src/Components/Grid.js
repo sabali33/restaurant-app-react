@@ -7,10 +7,7 @@ const Grid = props => {
         return props.data.find( table => table_id === table.id)
     }
     const cellsWithTables = () => {
-        
         return props.data ? props.data.map( table => table.id ) : [];
-        
-        //return props.data ? props.data.map( reservation => reservation.table_id ) : [];
     }
 
     const cells = {};

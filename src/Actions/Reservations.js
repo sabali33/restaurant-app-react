@@ -44,7 +44,7 @@ export const createReservationAction = data => {
                 date: data.date.toISOString().split('T')[0],
                 time: data.time,
                 table_id: data.tableId,
-                restaurant: restaurant
+                restaurant_id: restaurant.id
             })
         });
         const reservation = await response.json();

@@ -12,6 +12,7 @@ const AddTableForm = (props) => {
     const [ numberOfSeats, setNumberOfSeats ] = useState(storedNumberOfSeats);
     const [ errors, setErrors ] = useState('');
     const dispatch = useDispatch();
+    
     const setNumberOfSeatsHandle = e => {
         e.persist();
         setNumberOfSeats(Number(e.target.value));

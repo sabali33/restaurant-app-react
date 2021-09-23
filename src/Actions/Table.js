@@ -8,7 +8,8 @@ export const DELETE_TABLE = "DELETE_TABLE";
 export const getTablesAction = () => {
     return async (dispatch, getState) => {
         const token = getState().auth.token;
-        const response = await fetch(`${config.apiRoot}tables`, {
+        const restaurant = getState().auth.user.store;
+        const response = await fetch(`${config.apiRoot}tables?restaurant_id=${restaurant.id}`, {
             headers:{
                 Authorization: `Bearer ${token.token}`
             }

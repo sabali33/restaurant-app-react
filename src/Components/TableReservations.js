@@ -64,12 +64,25 @@ const TableReservations = props => {
     const closeFormModal = () => {
         setShowReservationForm(false);
     }
+    if( tableReservations.length < 1 ){
+        return <div className="relative">
+            <ReservationForm 
+                table={props.table} 
+                closeFormModal={closeFormModal} 
+                reservation={editingReservation} 
+                reservations={tableReservations}
+            />
+        </div>
+    }
     
     return <div className="ml-8 relative">
         <header className="mb-8">
             <h1 className="text-2xl font-bold mb-10">
                 Reservations for table #{ props.table.id }
             </h1>
+            <div className="my-4">
+                <span className="px-4 py-2 border border-gray-400 rounded cursor-pointer" onClick={props.onBackHere}> Back to Reservations </span>
+            </div>
             <ReservationFilter 
             onFilterReservations={props.onFilterReservations} 
             onShowReservationFormHandler={showReservationFormHandler}/>

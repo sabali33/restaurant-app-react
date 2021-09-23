@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CreateRestaurantAction } from '../Actions/Restaurant';
 import { getUserRestaurantAction } from '../Actions/Auth';
+import { sanitizeString  } from '../form-fields/sanitizers'
 
 const CreateRestaurantForm = () => {
     const [ name, setName ] = useState('');
@@ -11,9 +12,10 @@ const CreateRestaurantForm = () => {
     console.log(user);
     const dispatch = useDispatch();
 
-    const inputChangeHandler = e => {
+    const inputChangeHandler = (validators, e) => {
         e.persist();
-        setName(e.target.value);
+        const value = validators.sanitize(e.target.value)
+        setName(value);
     }
     const saveNameHandler = async e => {
         e.persist();
@@ -36,7 +38,9 @@ const CreateRestaurantForm = () => {
     useEffect( () => {
         getUserRestaurant()
     },[getUserRestaurant])
-
+    const validateField = {
+        sanitize: sanitizeString
+    }
     return <div>
         <h2 className="text-xl font-bold text-gray-800 mb-10"> Create Restaurant </h2>
         <section className="w-3/5">
@@ -48,7 +52,7 @@ const CreateRestaurantForm = () => {
                     <label htmlFor="name" className="text-gray-700"> Restaurant Name </label>
                 </p>
                 <p>
-                    <input type="text"  onChange={ inputChangeHandler} value={name} id="name" className="rounded w-full leading-10 pl-5 border-2 border-gray-700 border-opacity-100"/>
+                    <input type="text"  onChange={ inputChangeHandler.bind(this, validateField)} value={name} id="name" className="rounded w-full leading-10 pl-5 border-2 border-gray-700 border-opacity-100"/>
                 </p>
             </div>
             <p className="mt-2">

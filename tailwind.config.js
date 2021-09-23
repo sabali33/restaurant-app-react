@@ -7,8 +7,10 @@ module.exports = {
   variants: {
     extend: {
       display: ['hover', 'group-hover'],
-      left:['hover', 'group-hover']
+      left:['hover', 'group-hover'],
+      animation: ['responsive', 'motion-safe', 'motion-reduce', 'spin', 'pulse']
     },
+    
   },
   plugins: [],
   mode: 'jit',

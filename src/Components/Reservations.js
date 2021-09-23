@@ -45,10 +45,13 @@ const Reservations = () => {
             console.log(err);
         }
     }
+    const backHere = () => {
+        setSelectedTable(null);
+    }
     
     if( selectedTable ){
         
-        return <TableReservations table={selectedTable} onFilterReservations={filterReservations}/>
+        return <TableReservations table={selectedTable} onFilterReservations={filterReservations} onBackHere={backHere}/>
     }
     
     const editReservation = () => {}

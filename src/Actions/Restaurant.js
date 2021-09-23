@@ -10,7 +10,7 @@ export const CreateRestaurantAction = name => {
             method: "POST",
             headers: {
                 'Content-type': "application/json",
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token.token}`
             },
             body: JSON.stringify({name})
         });

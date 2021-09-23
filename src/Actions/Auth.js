@@ -28,7 +28,7 @@ export const loginAction = ( email='', password='' ) => {
                 }
                 throw new Error(user.message);
             }
-            
+            console.log(user);
             return dispatch({
                 user,
                 token: token,
@@ -51,7 +51,8 @@ export const loginAction = ( email='', password='' ) => {
             localStorage.setItem('ra-user-token', JSON.stringify({token: user.token, userId: user.user.id }));
 
             return dispatch({
-                ...user,
+                token: {token: user.token},
+                user: user.user,
                 type: LOGIN_USER
             });
         }
@@ -94,7 +95,8 @@ export const signUpUserAction = ( firstName, lastName, email, password ) => {
         localStorage.setItem('ra-user-token', JSON.stringify({token: user.token, userId: user.user.id}));
         return dispatch({
             type: LOGIN_USER,
-            ...user
+            user: user.user,
+            token: {token: user.token},
         });
     }
 }

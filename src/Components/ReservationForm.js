@@ -4,6 +4,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { createReservationAction, updateReservationsAction } from '../Actions/Reservations';
 import { updateTableAction } from '../Actions/Table';
+import { sanitizeString } from '../form-fields/sanitizers';
+import { Utils } from '../form-fields';
 
 const reservationFormReducer = (state, payload) => {
     switch (payload.type) {
@@ -11,6 +13,18 @@ const reservationFormReducer = (state, payload) => {
             return {
                 ...state,
                 data: {...state.data, [payload.field] : payload.value}
+            }
+        case 'FIELD_ERROR':
+            return {
+                ...state,
+                errors: { ...state.errors, [payload.field]: payload.value }
+            }
+        case 'FIELD_VALID':
+            const errors = state.errors;
+            delete errors[payload.field];
+            return {
+                ...state,
+                errors: errors
             }
         
         default:
@@ -20,7 +34,8 @@ const reservationFormReducer = (state, payload) => {
 const ReservationForm = props => {
     const date = props.reservation.date ? props.reservation.date : new Date();
     const [reservationState, dispatch ] = useReducer(reservationFormReducer,{
-        data: {...props.reservation, date: new Date(date)}
+        data: {...props.reservation, date: new Date(date)},
+        errors: {}
     });
     const dispatchRedux = useDispatch()
     const hoursOptions = (time) => {
@@ -30,15 +45,33 @@ const ReservationForm = props => {
         }
         return options;
     }
-    const inputChangeHandler = (field, e) => {
+    const inputChangeHandler = (field, validators, e) => {
         
+        if(validators.validators && validators.validators.length > 0){
+            validators.validators.forEach( validator => {
+                if( !validator(e.target.value)){
+                    dispatch({
+                        type: 'FIELD_ERROR',
+                        field: field,
+                        value: 'field not valid'
+                    })
+
+                }else{
+                    dispatch({
+                        type: 'FIELD_VALID',
+                        field: field
+                    })
+                }
+            })
+        }
         e.persist();
         dispatch({
             type: "INPUT_CHANGE",
             field,
-            value: e.target.value
+            value: validators.sanitize ? validators.sanitize(e.target.value) : e.target.value
         })
     }
+    
     const setDateHandler = date => {
 
         dispatch({
@@ -56,7 +89,9 @@ const ReservationForm = props => {
         return foundReservation === undefined ? true : false;
     }
     const createReservationHandler = async (reservation) => {
-        
+        if( Object.keys(reservationState.errors).length > 0){
+            return;
+        }
         try{
             if( Object.keys(reservation).length < 1 ){
                 if(props.table.number_of_seats < 1 ){
@@ -86,10 +121,12 @@ const ReservationForm = props => {
         }
         props.closeFormModal()
     }
+    
     return <div className="absolute inset-0 bg-gray-600 bg-opacity-60 h-full pb-full">
         <div className="p-4">
             <span className="bg-red-400 text-white font-bold px-4 py-2 rounded" onClick={props.closeFormModal}> Close </span>
         </div>
+        
         <div className="py-20 bg-gray-700 w-3/4 mx-auto px-12 rounded">
             <h2 className="mb-10 text-lg text-gray-100 font-bold"> You are reserving for table #{props.table.id}</h2>
             <div className="text-field mb-4">
@@ -107,7 +144,7 @@ const ReservationForm = props => {
                     />
                     
                     <label htmlFor="time" className="text-white mr-4" > Time  </label>
-                    <select onChange={ inputChangeHandler.bind(this, 'time') } id="time" className="w-1/3 leading-10 rounded h-10">
+                    <select onChange={ inputChangeHandler.bind(this, 'time', {sanitize: sanitizeString, validators: null}) } id="time" className="w-1/3 leading-10 rounded h-10">
                     {
                         hoursOptions(reservationState.data.time)
                     }
@@ -120,7 +157,7 @@ const ReservationForm = props => {
                     <label htmlFor="first-name" className="text-white"> Customer Name</label>
                 </p>
                 <p>
-                    <input type="text"  onChange={ inputChangeHandler.bind(this, 'customer_name') } value={reservationState.data.customer_name} id="customer-name" className="rounded w-full leading-10 pl-5 shadow"/>
+                    <input type="text"  onChange={ inputChangeHandler.bind(this, 'customer_name', {sanitize: sanitizeString}) } value={reservationState.data.customer_name} id="customer-name" className="rounded w-full leading-10 pl-5 shadow"/>
                 </p>
             </div>
             
@@ -129,7 +166,12 @@ const ReservationForm = props => {
                     <label htmlFor="phone" className="text-white"> Phone </label>
                 </p>
                 <p>
-                    <input type="phone"  onChange={ inputChangeHandler.bind(this, 'phone') } value={reservationState.data.phone} id="phone" className="rounded w-full leading-10 pl-5 shadow"/>
+                    <input type="phone"  
+                    onChange={ inputChangeHandler.bind(this, 'phone', {sanitize: sanitizeString, validators: [Utils.validators.isPhoneNumber]}) } 
+                    value={reservationState.data.phone} 
+                    id="phone" 
+                    className="rounded w-full leading-10 pl-5 shadow"/>
+                    <span className="text-red-400">{reservationState.errors.phone}</span>
                 </p>
             </div>
             <div className="text-field mb-4">
@@ -137,7 +179,8 @@ const ReservationForm = props => {
                     <label htmlFor="email" className="text-white"> Email </label>
                 </p>
                 <p>
-                    <input type="email"  onChange={ inputChangeHandler.bind(this, 'email') } value={reservationState.data.email} id="email" className="rounded w-full leading-10 pl-5 shadow"/>
+                    <input type="email"  onChange={ inputChangeHandler.bind(this, 'email', {validators: [Utils.validators.isEmail]}) } value={reservationState.data.email} id="email" className="rounded w-full leading-10 pl-5 shadow"/>
+                    <span className="text-red-400">{reservationState.errors.email}</span>
                 </p>
             </div>
             <div className="text-field mb-4">
@@ -145,7 +188,7 @@ const ReservationForm = props => {
                     <label htmlFor="address" className="text-white"> Address </label>
                 </p>
                 <p>
-                    <input type="Text"  onChange={ inputChangeHandler.bind(this, 'address') } value={reservationState.data.address} id="address" className="rounded w-full leading-10 pl-5 shadow"/>
+                    <input type="Text"  onChange={ inputChangeHandler.bind(this, 'address', { validators: null}) } value={reservationState.data.address} id="address" className="rounded w-full leading-10 pl-5 shadow"/>
                 </p>
             </div>
             <div className="text-field mb-4">

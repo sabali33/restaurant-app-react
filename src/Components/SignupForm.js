@@ -1,6 +1,8 @@
-import React, {useReducer } from 'react';
-import { useDispatch } from 'react-redux';
+import React, {useReducer, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { signUpUserAction } from '../Actions/Auth';
+import { Utils } from '../form-fields';
+import { ReactComponent as Spinner } from '../Components/icons/spinner.svg'
 
 
 const signUpReducer = (state, action) => {
@@ -15,10 +17,23 @@ const signUpReducer = (state, action) => {
                 ...state,
                 fieldsDirty: { ...state.fieldsDirty, [action.field]: true}
             }
-        case 'ERROR':
+        case 'FIELD_ERROR':
+            
             return {
                 ...state,
-                error: action.message
+                errors: {...state.errors, [action.field]: action.value}
+            }
+        case 'FIELD_VALID':
+            const errors = state.errors;
+            delete errors[action.field];
+            return{
+                ...state,
+                errors: errors
+            }
+        case "FORM_TOUCHED":
+            return {
+                ...state,
+                formIsTouched: true
             }
         default:
             return state;
@@ -26,9 +41,10 @@ const signUpReducer = (state, action) => {
 }
 
 const SignupForm = props => {
-
+    const [signingUp, setSigningUp ] = useState(false);
     const dispatchRedux = useDispatch();
-
+    const validators = Utils.validators;
+    const sanitizeString = Utils.sanitizers.sanitizeString
     const [signupState, dispatch ] = useReducer(signUpReducer, {
         data: {
             'first_name': "",
@@ -37,27 +53,48 @@ const SignupForm = props => {
             'password': "",
             'password_confirm': "",
         },
-        fieldsDirty: {
-            'first_name': false,
-            'last_name': false,
-            'email': false,
-            'password': false,
-            'password_confirm': false,
-        },
-        error: ''
+        errors: {},
+        formIsTouched: false
     });
-
-    const inputChangeHandler = ( field, e) => {
+    const user = useSelector(state => state.auth);
+    console.log(user)
+    const inputChangeHandler = ( field, validators, e) => {
         e.persist();
-        
+
+        const fieldIsValid = validators.validators ? Utils.validators.validationRunner(e.target.value, validators.validators): true;
+       
+        if(!fieldIsValid){
+            dispatch({
+                type: 'FIELD_ERROR',
+                field: field,
+                value: field === 'password_confirm' ? "Password does not match" :`${field} is not valid`
+            })
+        }else{
+            dispatch({
+                type: 'FIELD_VALID',
+                field: field
+            })
+        }
+         
         dispatch({
             type: 'INPUT_CHANGE',
             field,
-            value: e.target.value
+            value: validators.sanitize ? validators.sanitize(e.target.value) : e.target.value
         })
+        if( !signupState.formIsTouched ){
+            dispatch({
+                type: 'FORM_TOUCHED'
+            })
+        }
     }
     const signupHandler = async event => {
+        if(Object.keys(signupState.errors).length > 0 || !signupState.formIsTouched) {
+            alert('Enter valid values for the fields');
+            return;
+        }
+        
         event.persist();
+        setSigningUp(true);
         try{
             await dispatchRedux(
                 signUpUserAction(
@@ -73,7 +110,9 @@ const SignupForm = props => {
                 type: 'ERROR',
                 message: err.message
             })
+            
         }
+        setSigningUp(false)
     }
     
     return (
@@ -94,7 +133,7 @@ const SignupForm = props => {
                     <label htmlFor="first-name" className="text-gray-700"> First Name </label>
                 </p>
                 <p>
-                    <input type="text"  onChange={ inputChangeHandler.bind(this, 'first_name') } value={signupState.data.first_name} id="first-name" className="rounded w-full leading-10 pl-5 shadow"/>
+                    <input type="text"  onChange={ inputChangeHandler.bind(this, 'first_name', {sanitize: sanitizeString}) } value={signupState.data.first_name} id="first-name" className="rounded w-full leading-10 pl-5 shadow"/>
                 </p>
             </div>
             <div className="text-field mb-4">
@@ -102,15 +141,17 @@ const SignupForm = props => {
                     <label htmlFor="last-name" className="text-gray-700"> Last Name </label>
                 </p>
                 <p>
-                    <input type="text"  onChange={ inputChangeHandler.bind(this, 'last_name') } value={signupState.data.last_name} id="last-name" className="rounded w-full leading-10 pl-5 shadow"/>
+                    <input type="text"  onChange={ inputChangeHandler.bind(this, 'last_name', {sanitize: sanitizeString}) } value={signupState.data.last_name} id="last-name" className="rounded w-full leading-10 pl-5 shadow"/>
                 </p>
+                
             </div>
             <div className="text-field mb-4">
                 <p className="mb-2">
                     <label htmlFor="email" className="text-gray-700"> Email </label>
                 </p>
                 <p>
-                    <input type="email"  onChange={ inputChangeHandler.bind(this, 'email') } value={signupState.data.email} id="email" className="rounded w-full leading-10 pl-5 shadow"/>
+                    <input type="email"  onChange={ inputChangeHandler.bind(this, 'email', {validators: [validators.isEmail]}) } value={signupState.data.email} id="email" className="rounded w-full leading-10 pl-5 shadow"/>
+                    <span className="text-red-400">{signupState.errors.email}</span>
                 </p>
             </div>
             <div className="text-field mb-4">
@@ -118,7 +159,7 @@ const SignupForm = props => {
                     <label htmlFor="password" className="text-gray-700"> Password </label>
                 </p>
                 <p>
-                    <input type="password"  onChange={ inputChangeHandler.bind(this, 'password') } value={signupState.data.password} id="password" className="rounded w-full leading-10 pl-5 shadow"/>
+                    <input type="password"  onChange={ inputChangeHandler.bind(this, 'password', {validators: []}) } value={signupState.data.password} id="password" className="rounded w-full leading-10 pl-5 shadow"/>
                 </p>
             </div>
             <div className="text-field mb-4">
@@ -126,14 +167,26 @@ const SignupForm = props => {
                     <label htmlFor="password-confirm" className="text-gray-700"> Password Confirm </label>
                 </p>
                 <p>
-                    <input type="password"  onChange={ inputChangeHandler.bind(this, 'password_confirm') } value={signupState.data.password_confirm} id="password-confirm" className="rounded w-full leading-10 pl-5 shadow"/>
+                    <input 
+                    type="password"  
+                    onChange={ inputChangeHandler.bind(this, 'password_confirm', {validators: [validators.confirmPassword.bind(this, signupState.data.password)]}) } 
+                    value={signupState.data.password_confirm} 
+                    id="password-confirm" 
+                    className="rounded w-full leading-10 pl-5 shadow"/>
                 </p>
+                <span className="text-red-400">{signupState.errors.password_confirm}</span>
             </div>
             <div className="text-field mb-4">
                 <p>
-                    <button className="bg-yellow-200 text-gray-600 px-10 py-3 rounded font-bold" onClick={signupHandler}> Sign up</button>
+                    <button className="bg-yellow-200 text-gray-600 px-10 py-3 rounded font-bold" onClick={signupHandler} disabled={signingUp} > 
+                    {
+                        signingUp ? <Spinner /> : 'Sign up'
+                    }
+                    </button>
                 </p>
+                
             </div>
+            
         </div>
     )
 }

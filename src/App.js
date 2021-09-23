@@ -7,7 +7,6 @@ import { loginAction, logoutAction } from './Actions/Auth';
 function App() {
 	
 	const user = useSelector( state => state.auth);
-	console.log(user)
 	const dispatch = useDispatch();
 	const getUser = useCallback(async () => {
 		try{

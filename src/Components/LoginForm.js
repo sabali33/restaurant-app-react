@@ -14,6 +14,7 @@ const LoginForm = props => {
         setFunc(event.target.value);
     }
     const loginHandler = async () => {
+        
         if(loginEmail.trim().length < 1){
             setLoginError("Email field can't be empty");
             return;
