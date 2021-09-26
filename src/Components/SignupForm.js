@@ -1,8 +1,8 @@
 import React, {useReducer, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { signUpUserAction } from '../Actions/Auth';
 import { Utils } from '../form-fields';
-import { ReactComponent as Spinner } from '../Components/icons/spinner.svg'
+import Spinner from './Spinner';
 
 
 const signUpReducer = (state, action) => {
@@ -56,8 +56,6 @@ const SignupForm = props => {
         errors: {},
         formIsTouched: false
     });
-    const user = useSelector(state => state.auth);
-    console.log(user)
     const inputChangeHandler = ( field, validators, e) => {
         e.persist();
 
@@ -88,8 +86,9 @@ const SignupForm = props => {
         }
     }
     const signupHandler = async event => {
-        if(Object.keys(signupState.errors).length > 0 || !signupState.formIsTouched) {
-            alert('Enter valid values for the fields');
+        if(Object.keys(signupState.errors).length > 0 || 
+        !signupState.formIsTouched || !Utils.validators.arrayElementsHaveValues(Object.values(signupState.data)) ) {
+            alert('Enter valid values for all the fields');
             return;
         }
         
@@ -180,7 +179,7 @@ const SignupForm = props => {
                 <p>
                     <button className="bg-yellow-200 text-gray-600 px-10 py-3 rounded font-bold" onClick={signupHandler} disabled={signingUp} > 
                     {
-                        signingUp ? <Spinner /> : 'Sign up'
+                        signingUp ? <Spinner customClass="text-gray-400"/> : 'Sign up'
                     }
                     </button>
                 </p>

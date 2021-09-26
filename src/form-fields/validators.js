@@ -21,3 +21,11 @@ export const validationRunner = (value, validators) => {
     })
     return valid;
 }
+export const arrayElementsHaveValues = fields => {
+    if( !fields ){
+        return;
+    }
+    return fields.every( field => {
+        return Boolean(field);
+    })
+}

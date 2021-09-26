@@ -57,15 +57,22 @@ export const createReservationAction = data => {
         })
     }
 }
-export const getReservationsAction = () => {
+export const getReservationsAction = (options) => {
+    
     return async (dispatch, getState ) => {
         const token = getState().auth.token;
-        const response = await fetch(`${config.apiRoot}reservations`,{
+        const restaurant = getState().auth.user.store
+        
+        options.restaurant_id = restaurant.id;
+        const query = parseQueryArgs(options);
+        
+        const response = await fetch(`${config.apiRoot}reservations${query}`,{
             headers: {
                 Authorization: `Bearer ${token.token}`
             }
         });
         const reservations = await response.json();
+        console.log(reservations)
         if( reservations.error ){
             throw new Error( reservations.message )
         }

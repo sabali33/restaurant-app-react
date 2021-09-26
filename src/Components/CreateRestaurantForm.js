@@ -8,8 +8,6 @@ const CreateRestaurantForm = () => {
     const [ name, setName ] = useState('');
     const [ error, setError ] = useState(null);
     const restaurant = useSelector( state => state.restaurant.restaurant );
-    const user = useSelector( state => state.auth );
-    console.log(user);
     const dispatch = useDispatch();
 
     const inputChangeHandler = (validators, e) => {
@@ -31,13 +29,15 @@ const CreateRestaurantForm = () => {
 			await dispatch(getUserRestaurantAction(restaurant))
 			
 		}catch( err ){
-		console.log(err.message)
+		//console.log(err.message)
+        setError(err.message)
 		}
 	}, [dispatch, restaurant]);
 
     useEffect( () => {
         getUserRestaurant()
     },[getUserRestaurant])
+    
     const validateField = {
         sanitize: sanitizeString
     }

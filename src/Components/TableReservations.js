@@ -9,6 +9,8 @@ const TableReservations = props => {
     const tableReservations = useSelector(state => state.reservations.tableReservations);
     const [ showReservationForm, setShowReservationForm ] = useState(false);
     const [ editingReservation, setEditingReservation ] = useState({});
+    const [ error, setError ] = useState('');
+
     const dispatch = useDispatch();
     const {id} = props.table;
     const getTableReservations = useCallback(
@@ -17,6 +19,7 @@ const TableReservations = props => {
                 await dispatch(getTableReservationsAction({table_id:id, sort: 'future'}));
             }catch( err ){
                 console.log(err);
+                setError(err.message);
             }
             
         },
@@ -64,18 +67,12 @@ const TableReservations = props => {
     const closeFormModal = () => {
         setShowReservationForm(false);
     }
-    if( tableReservations.length < 1 ){
-        return <div className="relative">
-            <ReservationForm 
-                table={props.table} 
-                closeFormModal={closeFormModal} 
-                reservation={editingReservation} 
-                reservations={tableReservations}
-            />
-        </div>
-    }
+    
     
     return <div className="ml-8 relative">
+        {
+            error && <div className="text-red-400">{error}</div>
+        }
         <header className="mb-8">
             <h1 className="text-2xl font-bold mb-10">
                 Reservations for table #{ props.table.id }

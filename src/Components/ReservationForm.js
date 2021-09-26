@@ -33,8 +33,16 @@ const reservationFormReducer = (state, payload) => {
 }
 const ReservationForm = props => {
     const date = props.reservation.date ? props.reservation.date : new Date();
+    const data = Object.keys(props.reservation).length > 0 ? props.reservations : {
+        date,
+        time: '12:00:00',
+        customer_name: '',
+        phone: '',
+        email: '',
+        address: ''
+    }
     const [reservationState, dispatch ] = useReducer(reservationFormReducer,{
-        data: {...props.reservation, date: new Date(date)},
+        data: data,
         errors: {}
     });
     const dispatchRedux = useDispatch()
@@ -123,6 +131,7 @@ const ReservationForm = props => {
     }
     
     return <div className="absolute inset-0 bg-gray-600 bg-opacity-60 h-full pb-full">
+        
         <div className="p-4">
             <span className="bg-red-400 text-white font-bold px-4 py-2 rounded" onClick={props.closeFormModal}> Close </span>
         </div>

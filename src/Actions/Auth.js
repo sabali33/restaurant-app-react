@@ -28,7 +28,7 @@ export const loginAction = ( email='', password='' ) => {
                 }
                 throw new Error(user.message);
             }
-            console.log(user);
+            
             return dispatch({
                 user,
                 token: token,

@@ -10,12 +10,14 @@ const Tables = (props) => {
     const store_tables = useSelector( state => state.tables.tables );
     
     const [editingTable, setEditingTable ] = useState(false);
+    const [ error, setError ] = useState('');
     const dispatch = useDispatch();
     const getTables = useCallback(async () =>{
         try{
             await dispatch(getTablesAction());
         }catch( err) {
-            console.log(err.message)
+            console.log(err.message);
+            setError(err.message);
         }
     },[dispatch]);
     useEffect( () => {
@@ -34,6 +36,9 @@ const Tables = (props) => {
     
     return (<DndProvider backend={HTML5Backend}>
         <div className="relative">
+            {
+                error && <div className="text-red-400">{error}</div>
+            }
             <Grid 
                 data={store_tables} 
                 addData={addTable} 
