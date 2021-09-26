@@ -53,7 +53,7 @@ const ReservationForm = props => {
         }
         return options;
     }
-    const inputChangeHandler = (field, validators, e) => {
+    const inputChangeHandler =  (field, validators, e) => {
         
         if(validators.validators && validators.validators.length > 0){
             validators.validators.forEach( validator => {
@@ -72,21 +72,75 @@ const ReservationForm = props => {
                 }
             })
         }
+        
         e.persist();
+        if( field === 'time' ){
+            if( isDateLate(reservationState.data.date, e.target.value) ){
+                dispatch({
+                    type: "FIELD_ERROR",
+                    value: 'Time is late',
+                    field: 'time'
+                });
+                dispatch({
+                    type: "FIELD_ERROR",
+                    value: 'Time is late',
+                    field: 'date'
+                });
+
+            }else{
+                dispatch({
+                    type: "FIELD_VALID",
+                    field: 'time'
+                });
+                dispatch({
+                    type: "FIELD_VALID",
+                    field: 'date'
+                });
+            }
+        }
         dispatch({
             type: "INPUT_CHANGE",
             field,
             value: validators.sanitize ? validators.sanitize(e.target.value) : e.target.value
         })
+
     }
     
-    const setDateHandler = date => {
-
-        dispatch({
+    const setDateHandler = async date => {
+        if( isDateLate(date, reservationState.data.time) ){
+            dispatch({
+                type: "FIELD_ERROR",
+                value: 'Time is late',
+                field: 'date'
+            });
+            dispatch({
+                type: "FIELD_ERROR",
+                value: 'Time is late',
+                field: 'time'
+            });
+        }else{
+            dispatch({
+                type: "FIELD_VALID",
+                field: 'date'
+            });
+            dispatch({
+                type: "FIELD_VALID",
+                field: 'time'
+            });
+        }
+        await dispatch({
             type: "INPUT_CHANGE",
             field: 'date',
             value: date
-        })
+        });
+        
+    }
+    const isDateLate  = (date, time) => {
+        const dateTime = new Date(date) //`${().toISOString().split('T')[0]}T${reservationState.data.time}`;
+        time = time.split(":");
+        dateTime.setHours(...time);
+        return dateTime < new Date();
+
     }
     const isDateTimeAvailable = () => {
         const foundReservation = props.reservations.find( reservation => {
@@ -144,20 +198,26 @@ const ReservationForm = props => {
                 </p>
                 <div  className="flex content-between">
                     {/* <input type="text"  onChange={ inputChangeHandler.bind(this, 'date') } value={reservationState.data.date} id="date" className="rounded leading-10 pl-5 shadow w-1/3"/> */}
-                    
+                    <div >
                     <DatePicker 
                     selected={reservationState.data.date} 
                     onChange={setDateHandler}
                     className="rounded leading-10 pl-5"
                     dateFormat="yyyy-MM-dd"
                     />
-                    
+                    {
+                        reservationState.errors.date && <span className="text-red-400">{reservationState.errors.date}</span>
+                    }
+                    </div>
                     <label htmlFor="time" className="text-white mr-4" > Time  </label>
-                    <select onChange={ inputChangeHandler.bind(this, 'time', {sanitize: sanitizeString, validators: null}) } id="time" className="w-1/3 leading-10 rounded h-10">
+                    <select onChange={ inputChangeHandler.bind(this, 'time', {sanitize: null, validators: null}) } id="time" className="w-1/3 leading-10 rounded h-10">
                     {
                         hoursOptions(reservationState.data.time)
                     }
                     </select>
+                    {
+                        reservationState.errors.time && <span className="text-red-400">{reservationState.errors.time}</span>
+                    }
                 </div>
             </div>
             
