@@ -34,6 +34,7 @@ const TableReservations = props => {
             await dispatch(deleteReservationsAction(reservation_id));
         } catch (err) {
             console.log(err)
+            console.log(err)
         }
     }
     const  showReservationEditForm = (reservation) => {
