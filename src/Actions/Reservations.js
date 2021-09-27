@@ -7,9 +7,14 @@ export const DELETE_RESERVATION = "DELETE  _RESERVATION";
 export const UPDATE_RESERVATION = "UPDATE  _RESERVATION";
 
 export const getTableReservationsAction = options => {
-    const query = parseQueryArgs(options);
+    
     return async (dispatch, getState) => {
         const token = getState().auth.token
+        
+        const restaurant = getState().auth.user.store;
+        
+        options.restaurant_id = restaurant.id;
+        const query = parseQueryArgs(options);
         const response = await fetch(`${config.apiRoot}reservations${query}`, {
             headers: {
                 Authorization: `Bearer ${token.token}`
