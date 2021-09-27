@@ -23,7 +23,6 @@ export const getTableReservationsReducer = (state=initialState, action) => {
                 reservations: action.reservations
             }
         case DELETE_RESERVATION:
-            console.log(action.reservation_id);
             const newReservations = state.tableReservations.filter( reservation => {
                 return reservation.id !== action.reservation_id
             });

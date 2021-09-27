@@ -140,19 +140,28 @@ const ReservationForm = props => {
         const dateTime = new Date(date) //`${().toISOString().split('T')[0]}T${reservationState.data.time}`;
         time = time.split(":");
         dateTime.setHours(...time);
-        return dateTime < new Date();
+        return dateTime.getTime() < (new Date()).getTime();
 
     }
     const isDateTimeAvailable = () => {
         const foundReservation = props.reservations.find( reservation => {
-            const reservationDate = (new Date(reservation.date)).toISOString().split('T')[0];
-            const curReservationDate = (new Date(reservationState.data.date)).toISOString().split('T')[0];
-            return reservation.time === reservationState.data.time && reservationDate === curReservationDate;
+            const reservationDate = new Date(reservation.date);
+            const reservationTime = reservation.time.split(":");
+            reservationDate.setHours(...reservationTime);
+            const curReservationDate = new Date(reservationState.data.date);
+            const curReservationTime = reservationState.data.time.split(':');
+            curReservationDate.setHours(...curReservationTime);
+            return reservationDate.getTime() === curReservationDate.getTime();
         });
+        
         return foundReservation === undefined ? true : false;
     }
     const createReservationHandler = async (reservation) => {
         if( Object.keys(reservationState.errors).length > 0){
+            return;
+        }
+        if( !Utils.validators.arrayElementsHaveValues(Object.values(reservationState.data))){
+            alert('Some fields needs to have values');
             return;
         }
         try{
@@ -165,6 +174,7 @@ const ReservationForm = props => {
                     alert( 'Sorry the selected time is not available');
                     return;
                 }
+                
                 await dispatchRedux(createReservationAction({
                     ...reservationState.data,
                     tableId: props.table.id
