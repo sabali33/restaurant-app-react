@@ -37,7 +37,7 @@ const LoginForm = props => {
     }
     
     return (
-        <div className="login-box w-1/2 p-12 border-2 border-solid border-gray-200 border-opacity-100 rounded-md">
+        <div className="login-box sm:order-1 md:order-2 md:w-1/2 p-12 border-2 border-solid border-gray-200 border-opacity-100 rounded-md">
             {
                 Object.keys(loginError).length > 0 ? <div className="text-red-400 pt-3 mb-8">{loginError}</div> : ""
             }

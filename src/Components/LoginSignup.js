@@ -7,7 +7,7 @@ const LoginSignup = (props) => {
     
     return (
         <div className="login-signup-box mx-auto">
-            <div className="flex justify-between w-full">
+            <div className="flex flex-col md:flex-row md:justify-between w-full">
                 <SignupForm />
                 <LoginForm />
             </div>

@@ -6,8 +6,8 @@ const TableReservationsOverview = props => {
             <div className="w-1/5">{reservation.time}</div>
             <div className="w-1/5">{reservation.date.split('T')[0]}</div>
             <div className="w-1/5">{reservation.customer_name}</div>
-            <div className="w-1/5">{reservation.phone}</div>
-            <div className="w-1/5">{reservation.address}</div>
+            <div className="w-1/5 text-sm">{reservation.phone}</div>
+            <div className="w-1/5 hidden md:inline-flex">{reservation.address}</div>
         </div>
     })
     return <div className="">

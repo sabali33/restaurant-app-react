@@ -115,7 +115,7 @@ const SignupForm = props => {
     }
     
     return (
-        <div className="signup-box w-1/2 bg-gray-200 p-12 rounded-md">
+        <div className="signup-box sm:order-2 md:order-1 md:w-1/2 bg-gray-200 p-12 rounded-md">
             {
                 signupState.error && 
                 <div className="text-red-400 py-2 px-4">

@@ -74,7 +74,7 @@ const TableReservations = props => {
             error && <div className="text-red-400">{error}</div>
         }
         <header className="mb-8">
-            <h1 className="text-2xl font-bold mb-10">
+            <h1 className="text-2xl font-bold mb-10 mt-8 lg:mt-0">
                 Reservations for table #{ props.table.id }
             </h1>
             <div className="my-4">

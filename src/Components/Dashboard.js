@@ -46,7 +46,8 @@ const Dashboard = () => {
         reservationsOverview.push( <TableReservationsOverview tableId={tableId} reservations={reservationsByTable[tableId]} key={tableId}/>)
     }
     
-    return (<div className="relative">
+    return (<div className="relative p-4">
+        <h1 className="my-4 font-bold text-xl pl-4 md:pl-0"> Dashboard </h1>
         {
             loadingReservations && <div className="absolute inset-0 bg-gray-600 bg-opacity-80 text-center py-10">
                 <div className="p-8 mx-auto w-1/5 z-10">
@@ -55,16 +56,17 @@ const Dashboard = () => {
                 </div>
         }
         {
-            <div className="text-red-400 p-4">{loadError}</div>
+            loadError && <div className="text-red-400 p-4">{loadError}</div>
         }
-        <div className="py-8">
-            <span className="px-4 py-2 bg-gray-300 border-r">
+        <div className="pb-8 mb-4">
+            <h3 className="pl-4 md:pl-0 text-gray-400">Select a date</h3>
+            <div className="px-4 py-4 bg-gray-300 border-r">
                 <DatePicker 
                 onChange={setDateHandler} 
                 dateFormat="yyyy-MM-dd" 
                 selected={selectedDate} 
                 className="rounded border border-gray-700 pl-4" />
-            </span>
+            </div>
         </div>
         {
             reservations.length > 0 &&
@@ -73,7 +75,7 @@ const Dashboard = () => {
             <div className="font-bold text-gray-400 w-1/5">Date</div>
             <div className="font-bold text-gray-400 w-1/5">Customer Name</div>
             <div className="font-bold text-gray-400 w-1/5">Phone</div>
-            <div className="font-bold text-gray-400 w-1/5">Address</div>
+            <div className="font-bold text-gray-400 w-1/5 hidden md:inline-flex">Address</div>
         </section>
         }
         <section>

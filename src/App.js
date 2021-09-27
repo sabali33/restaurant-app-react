@@ -31,7 +31,7 @@ function App() {
     <div className="App pt-10">
       	<header className="App-header mb-10 mx-auto container text-center">
 			<div className="flex justify-items-start">
-				<div className="w-1/3 text-left">
+				<div className="w-1/3 text-left pl-4 lg:pl-0">
 					<a
 						className="font-extrabold text-4xl"
 						href="/"

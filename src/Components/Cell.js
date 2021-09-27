@@ -44,7 +44,7 @@ const Cell = props => {
         Main = <span className="text-grey-400 hidden group-hover:inline-flex w-full h-full" onClick={props.onAdd.bind(this, props.id, props.data)}> 
         No table setup  </span>
       }
-    return <div  className="cursor-pointer p-2 text-gray-500 border border-b-0 border-r-0 last:border-b last:border-r border-gray-300  group w-40 h-20 relative" {...ref} >
+    return <div  className="cursor-pointer p-2 text-gray-500 border lg:border-b-0 lg:border-r-0 lg:last:border-b-0 lg:last:border-r border-gray-300  group w-40 h-20 relative" {...ref} >
             {
                 processing && <Spinner customClass="text-yellow-200" />
             }

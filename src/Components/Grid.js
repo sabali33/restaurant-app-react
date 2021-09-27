@@ -31,7 +31,7 @@ const Grid = props => {
     }
     const cells_arr = [];
     for( let row in cells){
-        cells_arr.push( <div className="flex" key={row}>{cells[row]}</div>);
+        cells_arr.push( <div className="flex flex-wrap lg:flex-nowrap lg:last:border-b border-gray-300" key={row}>{cells[row]}</div>);
     }
     return <div className="relative">
         

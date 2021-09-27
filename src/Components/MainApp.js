@@ -31,11 +31,11 @@ const MainApp = () => {
     const ActiveComponent = components[activeComponentName];
     
     return <section>
-        <div className="flex w-full">
-            <div className="w-1/4">
+        <div className="flex flex-col md:flex-row w-full">
+            <div className="md:w-1/4">
                 <Navigation setActiveComponent={setActiveComponentHandler} activeTab={activeTab}/>
             </div>
-            <div className="w-3/4 ml-8">
+            <div className="md:w-3/4 md:ml-8">
                 <ActiveComponent/>
             </div>
         </div>

@@ -190,34 +190,33 @@ const ReservationForm = props => {
             <span className="bg-red-400 text-white font-bold px-4 py-2 rounded" onClick={props.closeFormModal}> Close </span>
         </div>
         
-        <div className="py-20 bg-gray-700 w-3/4 mx-auto px-12 rounded">
+        <div className="py-20 bg-gray-700 md:w-3/4 mx-auto px-4 md:px-12 rounded">
             <h2 className="mb-10 text-lg text-gray-100 font-bold"> You are reserving for table #{props.table.id}</h2>
             <div className="text-field mb-4">
                 <p className="mb-2">
                     <label htmlFor="date" className="text-white"> Date </label>
                 </p>
-                <div  className="flex content-between">
+                <div  className="flex flex-col md:flex-row content-between">
                     {/* <input type="text"  onChange={ inputChangeHandler.bind(this, 'date') } value={reservationState.data.date} id="date" className="rounded leading-10 pl-5 shadow w-1/3"/> */}
                     <div >
                     <DatePicker 
                     selected={reservationState.data.date} 
                     onChange={setDateHandler}
-                    className="rounded leading-10 pl-5"
+                    className="rounded leading-10 pl-5 w-full"
                     dateFormat="yyyy-MM-dd"
+                    calendarClassName="lg:w-1/2"
                     />
                     {
                         reservationState.errors.date && <span className="text-red-400">{reservationState.errors.date}</span>
                     }
                     </div>
                     <label htmlFor="time" className="text-white mr-4" > Time  </label>
-                    <select onChange={ inputChangeHandler.bind(this, 'time', {sanitize: null, validators: null}) } id="time" className="w-1/3 leading-10 rounded h-10">
+                    <select onChange={ inputChangeHandler.bind(this, 'time', {sanitize: null, validators: null}) } id="time" className="w-full lg:w-1/3 leading-10 rounded h-10">
                     {
                         hoursOptions(reservationState.data.time)
                     }
                     </select>
-                    {
-                        reservationState.errors.time && <span className="text-red-400">{reservationState.errors.time}</span>
-                    }
+                    
                 </div>
             </div>
             
