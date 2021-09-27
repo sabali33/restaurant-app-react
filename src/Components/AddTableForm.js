@@ -24,7 +24,7 @@ const AddTableForm = (props) => {
         const randNumberOfSeats = table !== undefined ? table.number_of_seats : randomNumber(2, 12);
         setNumberOfSeats(randNumberOfSeats);
     },[table]);
-    
+
     const createTableHandler = async (table) => {
         try{
             if(table){
