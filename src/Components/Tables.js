@@ -5,7 +5,7 @@ import { DndProvider } from 'react-dnd'
 import { getTablesAction } from '../Actions/Table';
 import Grid from './Grid';
 
-const Tables = (props) => {
+const Tables = () => {
     
     const store_tables = useSelector( state => state.tables.tables );
     

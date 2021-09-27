@@ -1,20 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
 const ReservationFilter = props => {
     const [currentTab, setCurrentTab ] = useState('future');
-    const [md, setMd ] = useState(640);
     const setTabHandler = async (tab) => {
         setCurrentTab(tab);
         
          props.onFilterReservations(tab);
     }
-    useEffect( () => {
-        window.addEventListener('resize', () => {
-            //setMd(window.screen.width)
-        })
-    })
-    const mq = window.matchMedia(`(max-width: ${md}px)`);
-    console.log(mq);
+    
+    const mq = window.matchMedia(`(max-width: 640px)`);
+    
     return <div className="">
         <div className="flex flex-wrap sm:flex-nowrap justify-between w-full items-center">
             <span> Filter</span>

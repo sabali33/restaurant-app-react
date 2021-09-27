@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { createTableAction, deleteTableAction, updateTableAction } from '../Actions/Table';
 
@@ -8,15 +8,23 @@ const randomNumber = (min, max) => {
 }
 
 const AddTableForm = (props) => {
-    const storedNumberOfSeats = props.table ? props.table.number_of_seats : randomNumber(2, 12);
-    const [ numberOfSeats, setNumberOfSeats ] = useState(storedNumberOfSeats);
+    
+    const [ numberOfSeats, setNumberOfSeats ] = useState(0);
+   
     const [ errors, setErrors ] = useState('');
+    const { table } = props;
+
     const dispatch = useDispatch();
     
     const setNumberOfSeatsHandle = e => {
         e.persist();
         setNumberOfSeats(Number(e.target.value));
     }
+    useEffect( () => {
+        const randNumberOfSeats = table !== undefined ? table.number_of_seats : randomNumber(2, 12);
+        setNumberOfSeats(randNumberOfSeats);
+    },[table]);
+    
     const createTableHandler = async (table) => {
         try{
             if(table){
