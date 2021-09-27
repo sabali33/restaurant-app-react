@@ -32,8 +32,9 @@ const reservationFormReducer = (state, payload) => {
     }
 }
 const ReservationForm = props => {
-    const date = props.reservation.date ? props.reservation.date : new Date();
-    const data = Object.keys(props.reservation).length > 0 ? props.reservations : {
+    const date = props.reservation.date ? props.reservation.date.split('T')[0] : new Date();
+    
+    const data = Object.keys(props.reservation).length > 0 ? props.reservation : {
         date,
         time: '12:00:00',
         customer_name: '',
@@ -41,6 +42,7 @@ const ReservationForm = props => {
         email: '',
         address: ''
     }
+    
     const [reservationState, dispatch ] = useReducer(reservationFormReducer,{
         data: data,
         errors: {}
@@ -54,7 +56,7 @@ const ReservationForm = props => {
         return options;
     }
     const inputChangeHandler =  (field, validators, e) => {
-        
+        e.persist();
         if(validators.validators && validators.validators.length > 0){
             validators.validators.forEach( validator => {
                 if( !validator(e.target.value)){
@@ -73,7 +75,6 @@ const ReservationForm = props => {
             })
         }
         
-        e.persist();
         if( field === 'time' ){
             if( isDateLate(reservationState.data.date, e.target.value) ){
                 dispatch({
@@ -200,11 +201,10 @@ const ReservationForm = props => {
                     {/* <input type="text"  onChange={ inputChangeHandler.bind(this, 'date') } value={reservationState.data.date} id="date" className="rounded leading-10 pl-5 shadow w-1/3"/> */}
                     <div >
                     <DatePicker 
-                    selected={reservationState.data.date} 
+                    selected={new Date(reservationState.data.date)} 
                     onChange={setDateHandler}
                     className="rounded leading-10 pl-5 w-full"
                     dateFormat="yyyy-MM-dd"
-                    calendarClassName="lg:w-1/2"
                     />
                     {
                         reservationState.errors.date && <span className="text-red-400">{reservationState.errors.date}</span>

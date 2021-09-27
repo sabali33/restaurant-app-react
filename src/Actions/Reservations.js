@@ -72,7 +72,6 @@ export const getReservationsAction = (options) => {
             }
         });
         const reservations = await response.json();
-        console.log(reservations)
         if( reservations.error ){
             throw new Error( reservations.message )
         }
@@ -87,7 +86,7 @@ export const getReservationsAction = (options) => {
 export const deleteReservationsAction = (id) => {
     return async (dispatch, getState ) => {
         const token = getState().auth.token;
-        const response = await fetch(`${config.apiRoot}reservations/${id}`,{
+        const response = await fetch(`${config.apiRoot}reservation/${id}`,{
             headers: {
                 Authorization: `Bearer ${token.token}`
             },
